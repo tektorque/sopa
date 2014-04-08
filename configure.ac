@@ -59,6 +59,28 @@ LT_INIT([win32-dll])
 
 PKG_CHECK_MODULES(SOPA, [gobject-introspection-1.0 gobject-2.0 glib-2.0 ])
 
+dnl ***************************************************************************
+dnl GCOV coverage checks
+dnl ***************************************************************************
+AC_MSG_CHECKING([whether to build with gcov testing])
+AC_ARG_ENABLE([gcov],
+              [AS_HELP_STRING([--enable-gcov],
+                              [Whether to enable coverage testing (requires gcc and gcov)])],
+              [],
+              [enable_gcov=no])
+
+AS_IF([test "x$enable_gcov" = "xyes" && test "x$GCC" = "xyes"],
+      [
+        GCOV_CFLAGS="$CFLAGS -O0 -g -fprofile-arcs -ftest-coverage"
+        GCOV_LDFLAGS="$LDFLAGS -lgcov"
+      ]
+)
+
+AM_CONDITIONAL([GCOV_ENABLED], [test "x$enable_gcov" = "xyes"])
+AC_SUBST([GCOV_CFLAGS])
+AC_SUBST([GCOV_LDFLAGS])
+AC_MSG_RESULT([$enable_gcov])
+
 GOBJECT_INTROSPECTION_CHECK([0.6.5])
 
 AC_OUTPUT([
