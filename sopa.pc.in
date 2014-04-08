@@ -6,7 +6,7 @@ datadir=@datadir@
 includedir=@includedir@/libsopa-0.0.1
 
 Name: libsopa
-Description: Sample library created by Anjuta project wizard.
+Description: Simple HTML parser library.
 Version: @VERSION@
 Requires: 
 Libs: -L${libdir} -lsopa
