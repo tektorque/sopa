@@ -5,6 +5,8 @@ m4_define([sopa_minor_version], [0])
 m4_define([sopa_micro_version], [1])
 
 m4_define([sopa_version], [sopa_major_version.sopa_minor_version.sopa_micro_version])
+m4_define([sopa_api_version], [sopa_major_version.0])
+m4_define([sopa_api_version_am], [sopa_major_version\_0])
 
 m4_define([sopa_release_status],
           [m4_if(m4_eval(sopa_micro_version % 2), [1], [git],
@@ -38,7 +40,6 @@ AM_SILENT_RULES([yes])
 
 AC_PROG_CC_C_O
 
-
 AM_PATH_GLIB_2_0
 
 # Initialize libtool
@@ -49,20 +50,23 @@ SOPA_MAJOR_VERSION=sopa_major_version
 SOPA_MINOR_VERSION=sopa_minor_version
 SOPA_MICRO_VERSION=sopa_micro_version
 SOPA_VERSION=sopa_version
+SOPA_API_VERSION=sopa_api_version
+SOPA_API_VERSION_AM=sopa_api_version_am
 SOPA_RELEASE_STATUS=sopa_release_status
 AC_SUBST(SOPA_MAJOR_VERSION)
 AC_SUBST(SOPA_MICRO_VERSION)
 AC_SUBST(SOPA_MINOR_VERSION)
 AC_SUBST(SOPA_VERSION)
+AC_SUBST(SOPA_API_VERSION)
+AC_SUBST(SOPA_API_VERSION_AM)
 AC_SUBST(SOPA_RELEASE_STATUS)
 
 SOPA_LT_CURRENT=lt_current
 SOPA_LT_REVISION=lt_revision
 SOPA_LT_AGE=lt_age
 SOPA_LT_VERSION="$SOPA_LT_CURRENT:$SOPA_LT_REVISION:$SOPA_LT_AGE"
-
-SOPA_LDFLAGS="-version-info $SOPA_LT_VERSION"
-AC_SUBST(SOPA_LDFLAGS)
+SOPA_LT_LDFLAGS="-version-info $SOPA_LT_VERSION"
+AC_SUBST(SOPA_LT_LDFLAGS)
 
 dnl ***************************************************************************
 dnl Internationalization
@@ -125,7 +129,7 @@ AC_ARG_ENABLE([maintainer-flags],
 
 AS_IF([test "x$enable_maintainer_flags" = "xyes" && test "x$GCC" = "xyes"],
       [
-        AS_COMPILER_FLAGS([MAINTAINER_CFLAGS],
+        AS_COMPILER_FLAGS([SOPA_MAINTAINER_CFLAGS],
                           ["-Wall -Wshadow -Wcast-align
                             -Wno-uninitialized -Wformat-security
                             -Wno-strict-aliasing -Winit-self
@@ -133,11 +137,11 @@ AS_IF([test "x$enable_maintainer_flags" = "xyes" && test "x$GCC" = "xyes"],
                             -Wno-strict-aliasing -Wno-strict-aliasing"])
       ],
       [
-        AS_COMPILER_FLAGS([MAINTAINER_CFLAGS],
+        AS_COMPILER_FLAGS([SOPA_MAINTAINER_CFLAGS],
                           ["-Wall"])
       ]
 )
-AC_SUBST([MAINTAINER_CFLAGS])
+AC_SUBST([SOPA_MAINTAINER_CFLAGS])
 
 dnl ***************************************************************************
 dnl GCOV coverage checks
@@ -165,10 +169,14 @@ GTK_DOC_CHECK([1.14])
 
 GOBJECT_INTROSPECTION_CHECK([0.6.5])
 
-AC_OUTPUT([
-Makefile
-sopa.pc
-sopa/Makefile])
+AC_CONFIG_FILES([
+  Makefile
+  sopa.pc
+  sopa/sopa-version.h
+  sopa/Makefile
+])
+
+AC_OUTPUT
 
 dnl === Summary ===
 
@@ -178,7 +186,7 @@ echo ""
 echo " • Prefix: ${prefix}"
 echo ""
 echo " • Debug level: ${enable_debug}"
-echo " • Compiler flags: ${MAINTAINER_CFLAGS}"
+echo " • Compiler flags: ${SOPA_MAINTAINER_CFLAGS}"
 echo ""
 echo " • API reference: ${enable_gtk_doc}"
 echo ""

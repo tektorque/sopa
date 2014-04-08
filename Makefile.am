@@ -1,29 +1,17 @@
-ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
-
 SUBDIRS = sopa
 
-dist_doc_DATA = \
-	COPYING \
-	AUTHORS \
-	INSTALL \
-	README.md
+ACLOCAL_AMFLAGS = -I m4
 
+pcfiles = sopa-$(SOPA_API_VERSION).pc
 
-INTLTOOL_FILES = intltool-extract.in \
-	intltool-merge.in \
-	intltool-update.in
+sopa-$(SOPA_API_VERSION).pc: sopa.pc
+	@cp -f $< $@
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = sopa.pc
 
 EXTRA_DIST = \
-  sopa.pc.in \
-	$(INTLTOOL_FILES)
-
-DISTCLEANFILES = intltool-extract \
-	intltool-merge \
-	intltool-update
-
+  sopa.pc.in
 
 # Remove doc directory on uninstall
 uninstall-local:
