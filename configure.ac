@@ -1,10 +1,36 @@
-dnl Process this file with autoconf to produce a configure script.
+# bump micro_version to the next even number for each point release
+# bump micro_version to the next odd number after each release
+m4_define([sopa_major_version], [0])
+m4_define([sopa_minor_version], [0])
+m4_define([sopa_micro_version], [1])
 
-AC_INIT(sopa, 0.0.1)
+m4_define([sopa_version], [sopa_major_version.sopa_minor_version.sopa_micro_version])
 
+m4_define([sopa_release_status],
+          [m4_if(m4_eval(sopa_micro_version % 2), [1], [git],
+                 [m4_if(m4_eval(sopa_minor_version % 2), [1], [snapshot],
+                                                              [release])])])
+
+# bump up by 1 for every micro release with no API changes, otherwise
+# set to 0. after release, bump up by 1
+m4_define([sopa_interface_age], [0])
+m4_define([sopa_binary_age], [m4_eval(100 * sopa_minor_version + sopa_micro_version)])
+
+m4_define([lt_current], [m4_eval(100 * sopa_minor_version + sopa_micro_version - sopa_interface_age)])
+m4_define([lt_revision], [sopa_interface_age])
+m4_define([lt_age], [m4_eval(sopa_binary_age - sopa_interface_age)])
+
+m4_define([glib_req_version], [2.28])
+
+AC_PREREQ([2.63])
+
+AC_INIT([sopa],
+        [sopa_version],
+        [],
+        [sopa])
+AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_SRCDIR([sopa/sopa.h])
-AC_CONFIG_MACRO_DIR([build])
 
 AM_INIT_AUTOMAKE([1.11 no-define -Wno-portability dist-bzip2 foreign])
 
@@ -19,6 +45,25 @@ AM_PATH_GLIB_2_0
 LT_PREREQ([2.2.6])
 LT_INIT([disable-static])
 
+SOPA_MAJOR_VERSION=sopa_major_version
+SOPA_MINOR_VERSION=sopa_minor_version
+SOPA_MICRO_VERSION=sopa_micro_version
+SOPA_VERSION=sopa_version
+SOPA_RELEASE_STATUS=sopa_release_status
+AC_SUBST(SOPA_MAJOR_VERSION)
+AC_SUBST(SOPA_MICRO_VERSION)
+AC_SUBST(SOPA_MINOR_VERSION)
+AC_SUBST(SOPA_VERSION)
+AC_SUBST(SOPA_RELEASE_STATUS)
+
+SOPA_LT_CURRENT=lt_current
+SOPA_LT_REVISION=lt_revision
+SOPA_LT_AGE=lt_age
+SOPA_LT_VERSION="$SOPA_LT_CURRENT:$SOPA_LT_REVISION:$SOPA_LT_AGE"
+
+SOPA_LDFLAGS="-version-info $SOPA_LT_VERSION"
+AC_SUBST(SOPA_LDFLAGS)
+
 dnl ***************************************************************************
 dnl Internationalization
 dnl ***************************************************************************
@@ -29,35 +74,70 @@ dnl ***************************************************************************
 #AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE", [GETTEXT package name])
 #AM_GLIB_GNU_GETTEXT
 
-
-
-dnl ***************************************************************************
-dnl Check for Windows
-dnl ***************************************************************************
-AC_CANONICAL_HOST
-
-case $host_os in
-  *mingw*)
-    platform_win32=yes
-    native_win32=yes
-    ;;
-  pw32* | *cygwin*)
-    platform_win32=yes
-    native_win32=no
-    ;;
-  *)
-    platform_win32=no
-    native_win32=no
-    ;;
-esac
-AM_CONDITIONAL(PLATFORM_WIN32, test x"$platform_win32" = "xyes")
-AM_CONDITIONAL(NATIVE_WIN32, test x"$native_win32" = "xyes")
-
-
-LT_INIT([win32-dll])
-
-
 PKG_CHECK_MODULES(SOPA, [gobject-introspection-1.0 gobject-2.0 glib-2.0 ])
+
+dnl ***************************************************************************
+dnl Enable debug level
+dnl ***************************************************************************
+
+m4_define([debug_default], [m4_if(m4_eval(sopa_minor_version % 2), [1], [yes], [minimum])])
+
+AC_ARG_ENABLE([debug],
+              [AC_HELP_STRING([--enable-debug=@<:@no/minimum/yes@:>@],
+                              [turn on debugging @<:@default=debug_default@:>@])],
+              [],
+              [enable_debug=debug_default])
+
+AS_CASE([$enable_debug],
+
+        [yes],
+        [
+          test "$cflags_set" = set || CFLAGS="$CFLAGS -g"
+          SOPA_DEBUG_CFLAGS="-DSOPA_ENABLE_DEBUG"
+        ],
+
+        [minimum],
+        [
+          SOPA_DEBUG_CFLAGS="-DSOPA_ENABLE_DEBUG -DG_DISABLE_CAST_CHECKS"
+        ],
+
+        [no],
+        [
+          SOPA_DEBUG_CFLAGS="-DG_DISABLE_ASSERT -DG_DISABLE_CHECKS -DG_DISABLE_CAST_CHECKS"
+        ],
+
+        [AC_MSG_ERROR([Unknown argument to --enable-debug])]
+)
+
+AC_SUBST(SOPA_DEBUG_CFLAGS)
+
+dnl ***************************************************************************
+dnl = Enable strict compiler flags
+dnl ***************************************************************************
+
+# use strict compiler flags only on development releases
+m4_define([maintainer_flags_default], [m4_if(m4_eval(sopa_minor_version % 2), [1], [yes], [no])])
+AC_ARG_ENABLE([maintainer-flags],
+              [AC_HELP_STRING([--enable-maintainer-flags=@<:@no/yes@:>@],
+                              [Use strict compiler flags @<:@default=maintainer_flags_default@:>@])],
+              [],
+              [enable_maintainer_flags=maintainer_flags_default])
+
+AS_IF([test "x$enable_maintainer_flags" = "xyes" && test "x$GCC" = "xyes"],
+      [
+        AS_COMPILER_FLAGS([MAINTAINER_CFLAGS],
+                          ["-Wall -Wshadow -Wcast-align
+                            -Wno-uninitialized -Wformat-security
+                            -Wno-strict-aliasing -Winit-self
+                            -Wempty-body -Wdeclaration-after-statement
+                            -Wno-strict-aliasing -Wno-strict-aliasing"])
+      ],
+      [
+        AS_COMPILER_FLAGS([MAINTAINER_CFLAGS],
+                          ["-Wall"])
+      ]
+)
+AC_SUBST([MAINTAINER_CFLAGS])
 
 dnl ***************************************************************************
 dnl GCOV coverage checks
@@ -81,9 +161,27 @@ AC_SUBST([GCOV_CFLAGS])
 AC_SUBST([GCOV_LDFLAGS])
 AC_MSG_RESULT([$enable_gcov])
 
+GTK_DOC_CHECK([1.14])
+
 GOBJECT_INTROSPECTION_CHECK([0.6.5])
 
 AC_OUTPUT([
 Makefile
 sopa.pc
 sopa/Makefile])
+
+dnl === Summary ===
+
+echo ""
+echo " Sopa - $VERSION (${SOPA_RELEASE_STATUS})"
+echo ""
+echo " • Prefix: ${prefix}"
+echo ""
+echo " • Debug level: ${enable_debug}"
+echo " • Compiler flags: ${MAINTAINER_CFLAGS}"
+echo ""
+echo " • API reference: ${enable_gtk_doc}"
+echo ""
+echo " • Build introspection data: ${enable_introspection}"
+echo " • Enable coverage test: ${enable_gcov}"
+echo ""

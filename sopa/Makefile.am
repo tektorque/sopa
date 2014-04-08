@@ -20,14 +20,5 @@ libsopa_la_LDFLAGS =
 
 libsopa_la_LIBADD = $(SOPA_LIBS)
 
-
-if PLATFORM_WIN32
-libsopa_la_LDFLAGS += -no-undefined
-endif
-
-if NATIVE_WIN32
-libsopa_la_LDFLAGS += -export-dynamic
-endif
-
 include_HEADERS = \
 	sopa.h
