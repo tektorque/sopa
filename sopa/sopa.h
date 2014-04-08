@@ -1,6 +1,6 @@
 /* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 2; tab-width: 2 -*-  */
 /*
- * lib.h
+ * sopa.h
  * Copyright (C) 2014 Tektorque, Lda <geral@tektorque.com>
  * 
  * sopa is free software: you can redistribute it and/or modify it
@@ -17,5 +17,20 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-int sopa_func (void);
+#ifndef __SOPA_H__
+#define __SOPA_H__
+
+#define SOPA_H_INSIDE
+
+#include <sopa/sopa-comment.h>
+#include <sopa/sopa-data.h>
+#include <sopa/sopa-document.h>
+#include <sopa/sopa-element.h>
+#include <sopa/sopa-enum-types.h>
+#include <sopa/sopa-node.h>
+#include <sopa/sopa-text.h>
+
+#undef SOPA_H_INSIDE
+
+#endif /* __SOPA_H__ */
 
