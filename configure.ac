@@ -5,8 +5,8 @@ m4_define([sopa_minor_version], [0])
 m4_define([sopa_micro_version], [1])
 
 m4_define([sopa_version], [sopa_major_version.sopa_minor_version.sopa_micro_version])
-m4_define([sopa_api_version], [sopa_major_version.0])
-m4_define([sopa_api_version_am], [sopa_major_version\_0])
+m4_define([sopa_api_version], [0.2])
+m4_define([sopa_api_version_am], [0\_2])
 
 m4_define([sopa_release_status],
           [m4_if(m4_eval(sopa_micro_version % 2), [1], [git],
@@ -15,7 +15,7 @@ m4_define([sopa_release_status],
 
 # bump up by 1 for every micro release with no API changes, otherwise
 # set to 0. after release, bump up by 1
-m4_define([sopa_interface_age], [0])
+m4_define([sopa_interface_age], [1])
 m4_define([sopa_binary_age], [m4_eval(100 * sopa_minor_version + sopa_micro_version)])
 
 m4_define([lt_current], [m4_eval(100 * sopa_minor_version + sopa_micro_version - sopa_interface_age)])
