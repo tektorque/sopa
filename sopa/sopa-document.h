@@ -58,6 +58,46 @@ typedef struct _SopaDocument SopaDocument;
 typedef struct _SopaDocumentClass SopaDocumentClass;
 typedef struct _SopaDocumentPrivate SopaDocumentPrivate;
 
+/**
+ * SopaDocumentType:
+ * @SOPA_DOCUMENT_TYPE_HTML_401_STRICT: This DTD contains all HTML elements
+ * and attributes, but does NOT INCLUDE presentational or deprecated
+ * elements (like font). Framesets are not allowed.
+ * @SOPA_DOCUMENT_TYPE_HTML_401_TRANSITIONAL: This DTD contains all HTML
+ * elements and attributes, INCLUDING presentational and deprecated
+ * elements (like font). Framesets are not allowed.
+ * @SOPA_DOCUMENT_TYPE_HTML_401_FRAMESET: This DTD is equal to
+ * HTML 4.01 Transitional, but allows the use of frameset content.
+ * @SOPA_DOCUMENT_TYPE_XHTML_10_STRICT: This DTD contains all HTML elements
+ * and attributes, but does NOT INCLUDE presentational or deprecated
+ * elements (like font). Framesets are not allowed. The markup must also
+ * be written as well-formed XML.
+ * @SOPA_DOCUMENT_TYPE_XHTML_10_TRANSITIONAL: This DTD contains all HTML
+ * elements and attributes, INCLUDING presentational and deprecated
+ * elements (like font). Framesets are not allowed. The markup must also
+ * be written as well-formed XML.
+ * @SOPA_DOCUMENT_TYPE_XHTML_10_FRAMESET: This DTD is equal to
+ * XHTML 1.0 Transitional, but allows the use of frameset content.
+ * @SOPA_DOCUMENT_TYPE_XHTML_11: This DTD is equal to XHTML 1.0 Strict,
+ * but allows you to add modules (for example to provide ruby support
+ * for East-Asian languages).
+ * @SOPA_DOCUMENT_TYPE_HTML_5: <!DOCTYPE html>
+ *
+ * DOCTYPE declaration
+ *
+ * Since: 0.2
+ */
+typedef enum { /*< PREFIX=SOPA_DOCUMENT_TYPE >*/
+  SOPA_DOCUMENT_TYPE_HTML_401_STRICT        = (1 << 0),
+  SOPA_DOCUMENT_TYPE_HTML_401_TRANSITIONAL  = (1 << 1),
+  SOPA_DOCUMENT_TYPE_HTML_401_FRAMESET      = (1 << 2),
+  SOPA_DOCUMENT_TYPE_XHTML_10_STRICT        = (1 << 3),
+  SOPA_DOCUMENT_TYPE_XHTML_10_TRANSITIONAL  = (1 << 4),
+  SOPA_DOCUMENT_TYPE_XHTML_10_FRAMESET      = (1 << 5),
+  SOPA_DOCUMENT_TYPE_XHTML_11               = (1 << 6),
+  SOPA_DOCUMENT_TYPE_HTML_5                 = (1 << 7)
+} SopaDocumentType;
+
 struct _SopaDocument
 {
   SopaNode parent;
