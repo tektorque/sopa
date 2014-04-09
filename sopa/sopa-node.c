@@ -21,6 +21,7 @@
  */
 
 #include "sopa-node.h"
+#include "sopa-marshal.h"
 
 G_DEFINE_TYPE (SopaNode, sopa_node, G_TYPE_INITIALLY_UNOWNED)
 
@@ -69,6 +70,17 @@ enum {
 
 static GParamSpec *obj_props[PROP_LAST];
 
+enum {
+  DESTROY,
+
+  LAST_SIGNAL
+};
+
+static guint obj_signals[LAST_SIGNAL] = { 0, };
+
+/* Prototypes */
+static void               sopa_node_remove_child_internal                       (SopaNode               *self,
+                                                                                 SopaNode               *child);
 
 /*< private >
  * sopa_node_get_debug_name:
@@ -105,6 +117,20 @@ _sopa_node_get_debug_name (SopaNode *node)
 }
 
 static void
+sopa_node_real_destroy (SopaNode *node)
+{
+  SopaNodeIter iter;
+
+  g_object_freeze_notify (G_OBJECT (node));
+
+  sopa_node_iter_init (&iter, node);
+  while (sopa_node_iter_next (&iter, NULL))
+    sopa_node_iter_destroy (&iter);
+
+  g_object_thaw_notify (G_OBJECT (node));
+}
+
+static void
 sopa_node_get_property (GObject    *object,
                         guint       property_id,
                         GValue     *value,
@@ -133,12 +159,34 @@ sopa_node_set_property (GObject      *object,
 static void
 sopa_node_dispose (GObject *object)
 {
+  SopaNode *self = SOPA_NODE (object);
+  SopaNodePrivate *priv = self->priv;
+
+  g_signal_emit (self, obj_signals[DESTROY], 0);
+
+  /* avoid recursing when called from sopa_node_destroy() */
+  if (priv->parent != NULL)
+    {
+      SopaNode *parent = priv->parent;
+
+      sopa_node_remove_child_internal (parent, self);
+    }
+
   G_OBJECT_CLASS (sopa_node_parent_class)->dispose (object);
 }
 
 static void
 sopa_node_finalize (GObject *object)
 {
+  SopaNode *self = SOPA_NODE (object);
+  SopaNodePrivate *priv = self->priv;
+
+  g_free (priv->name);
+
+#ifdef SOPA_ENABLE_DEBUG
+  g_free (priv->debug_name);
+#endif
+
   G_OBJECT_CLASS (sopa_node_parent_class)->finalize (object);
 }
 
@@ -153,6 +201,8 @@ sopa_node_class_init (SopaNodeClass *klass)
   object_class->set_property = sopa_node_set_property;
   object_class->dispose = sopa_node_dispose;
   object_class->finalize = sopa_node_finalize;
+
+  klass->destroy = sopa_node_real_destroy;
 
   /**
    * SopaNode:name:
@@ -197,6 +247,16 @@ sopa_node_class_init (SopaNodeClass *klass)
                          G_PARAM_READABLE);
 
   g_object_class_install_properties (object_class, PROP_LAST, obj_props);
+
+
+  obj_signals[DESTROY] =
+    g_signal_new ("destroy",
+		              G_TYPE_FROM_CLASS (object_class),
+                  G_SIGNAL_RUN_CLEANUP | G_SIGNAL_NO_RECURSE | G_SIGNAL_NO_HOOKS,
+		              G_STRUCT_OFFSET (SopaNodeClass, destroy),
+		              NULL, NULL,
+		              _sopa_marshal_VOID__VOID,
+		              G_TYPE_NONE, 0);
 }
 
 static void

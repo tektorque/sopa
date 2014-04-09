@@ -69,7 +69,11 @@ struct _SopaNode
 
 struct _SopaNodeClass
 {
+  /*< private >*/
   GInitiallyUnownedClass parent_class;
+
+  /*< public >*/
+  void (* destroy)              (SopaNode           *self);
 };
 
 /**
