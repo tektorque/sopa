@@ -1,6 +1,6 @@
 /* -*- Mode: C; indent-tabs-mode: t; c-basic-offset: 2; tab-width: 2 -*-  */
 /*
- * sopa-node.c
+ * sopa-node.c (Based on ClutterActor class)
  * Copyright (C) 2014 Tektorque, Lda <geral@tektorque.com>
  * 
  * sopa is free software: you can redistribute it and/or modify it
@@ -18,6 +18,16 @@
  *
  * Authors:
  *    Emanuel Fernandes <efernandes@tektorque.com>
+ */
+
+/**
+ * SECTION:sopa-node
+ * @short_description: The basic element of the document
+ *
+ * The SopaNode class is the basic element of the document in Sopa,
+ * and it encapsulates the attributes, childs of a node in
+ * the document.
+ *
  */
 
 #include "sopa-node.h"
