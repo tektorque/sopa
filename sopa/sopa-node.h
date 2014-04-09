@@ -109,6 +109,8 @@ void                                sopa_node_insert_child_below                
                                                                                  SopaNode                 *sibling);
 void                                sopa_node_remove_child                      (SopaNode                 *self,
                                                                                  SopaNode                 *child);
+void                                sopa_node_remove_all_children               (SopaNode                 *self);
+void                                sopa_node_destroy_all_children              (SopaNode                 *self);
 SopaNode *                          sopa_node_get_parent                        (SopaNode                 *self);
 void                                sopa_node_iter_init                         (SopaNodeIter             *iter,
                                                                                  SopaNode                 *root);

@@ -260,6 +260,66 @@ sopa_node_destroy (SopaNode *self)
   g_object_unref (self);
 }
 
+static inline void
+remove_child (SopaNode *self,
+              SopaNode *child)
+{
+  SopaNode *prev_sibling, *next_sibling;
+
+  prev_sibling = child->priv->prev_sibling;
+  next_sibling = child->priv->next_sibling;
+
+  if (prev_sibling != NULL)
+    prev_sibling->priv->next_sibling = next_sibling;
+
+  if (next_sibling != NULL)
+    next_sibling->priv->prev_sibling = prev_sibling;
+
+  if (self->priv->first_child == child)
+    self->priv->first_child = next_sibling;
+
+  if (self->priv->last_child == child)
+    self->priv->last_child = prev_sibling;
+
+  child->priv->parent = NULL;
+  child->priv->prev_sibling = NULL;
+  child->priv->next_sibling = NULL;
+}
+
+static void
+sopa_node_remove_child_internal (SopaNode *self,
+                                 SopaNode *child)
+{
+  SopaNode *old_first, *old_last;
+  GObject *obj;
+
+  obj = G_OBJECT (self);
+  g_object_freeze_notify (obj);
+
+  old_first = self->priv->first_child;
+  old_last = self->priv->last_child;
+
+  remove_child (self, child);
+
+  self->priv->n_children -= 1;
+
+  self->priv->age += 1;
+
+  /* we need to emit the signal before dropping the reference */
+  //g_signal_emit_by_name (self, "node-removed", child);
+
+  if (old_first != self->priv->first_child)
+    g_object_notify_by_pspec (obj, obj_props[PROP_FIRST_CHILD]);
+
+  if (old_last != self->priv->last_child)
+    g_object_notify_by_pspec (obj, obj_props[PROP_LAST_CHILD]);
+
+  g_object_thaw_notify (obj);
+
+  /* remove the reference we acquired in sopa_node_add_child() */
+  g_object_unref (child);
+}
+
 static void
 insert_child_at_index (SopaNode *self,
                        SopaNode *child,
@@ -456,6 +516,8 @@ sopa_node_add_child_internal (SopaNode              *self,
 
   self->priv->age += 1;
 
+  //g_signal_emit_by_name (self, "node-added", child);
+
   if (old_first_child != self->priv->first_child)
     g_object_notify_by_pspec (obj, obj_props[PROP_FIRST_CHILD]);
 
@@ -614,7 +676,97 @@ sopa_node_remove_child (SopaNode *self,
   g_return_if_fail (child->priv->parent == NULL);
   g_return_if_fail (child->priv->parent == self);
 
-  //TODO
+  sopa_node_remove_child_internal (self, child);
+}
+
+/**
+ * sopa_node_remove_all_children:
+ * @self: a #SopaNode
+ *
+ * Removes all children of @self.
+ *
+ * This function releases the reference added by inserting a child actor
+ * in the list of children of @self.
+ *
+ * If the reference count of a child drops to zero, the child will be
+ * destroyed. If you want to ensure the destruction of all the children
+ * of @self, use sopa_node_destroy_all_children().
+ *
+ * Since: 0.2
+ */
+void
+sopa_node_remove_all_children (SopaNode *self)
+{
+  SopaNodeIter iter;
+
+  g_return_if_fail (SOPA_IS_NODE (self));
+
+  if (self->priv->n_children == 0)
+    return;
+
+  g_object_freeze_notify (G_OBJECT (self));
+
+  sopa_node_iter_init (&iter, self);
+  while (sopa_node_iter_next (&iter, NULL))
+    sopa_node_iter_remove (&iter);
+
+  g_object_thaw_notify (G_OBJECT (self));
+
+  /* sanity check */
+  g_assert (self->priv->first_child == NULL);
+  g_assert (self->priv->last_child == NULL);
+  g_assert (self->priv->n_children == 0);
+}
+
+/**
+ * sopa_node_destroy_all_children:
+ * @self: a #SopaNode
+ *
+ * Destroys all children of @self.
+ *
+ * This function releases the reference added by inserting a child
+ * node in the list of children of @self, and ensures that the
+ * #SopaNode::destroy signal is emitted on each child of the
+ * node.
+ *
+ * By default, #SopaNode will emit the #SopaNode::destroy signal
+ * when its reference count drops to 0; the default handler of the
+ * #SopaNode::destroy signal will destroy all the children of an
+ * actor. This function ensures that all children are destroyed, instead
+ * of just removed from @self, unlike sopa_node_remove_all_children()
+ * which will merely release the reference and remove each child.
+ *
+ * Unless you acquired an additional reference on each child of @self
+ * prior to calling sopa_node_remove_all_children() and want to reuse
+ * the actors, you should use sopa_node_destroy_all_children() in
+ * order to make sure that children are destroyed and signal handlers
+ * are disconnected even in cases where circular references prevent this
+ * from automatically happening through reference counting alone.
+ *
+ * Since: 0.2
+ */
+void
+sopa_node_destroy_all_children (SopaNode *self)
+{
+  SopaNodeIter iter;
+
+  g_return_if_fail (SOPA_IS_NODE (self));
+
+  if (self->priv->n_children == 0)
+    return;
+
+  g_object_freeze_notify (G_OBJECT (self));
+
+  sopa_node_iter_init (&iter, self);
+  while (sopa_node_iter_next (&iter, NULL))
+    sopa_node_iter_destroy (&iter);
+
+  g_object_thaw_notify (G_OBJECT (self));
+
+  /* sanity check */
+  g_assert (self->priv->first_child == NULL);
+  g_assert (self->priv->last_child == NULL);
+  g_assert (self->priv->n_children == 0);
 }
 
 /**
@@ -828,7 +980,7 @@ sopa_node_iter_remove (SopaNodeIter *iter)
     {
       ri->current = cur->priv->prev_sibling;
 
-      //TODO class sopa_node_remove_child (cur)
+      sopa_node_remove_child_internal (ri->root, cur);
 
       ri->age += 1;
     }
