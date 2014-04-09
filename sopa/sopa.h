@@ -27,8 +27,10 @@
 #include <sopa/sopa-document.h>
 #include <sopa/sopa-element.h>
 #include <sopa/sopa-enum-types.h>
+#include <sopa/sopa-macros.h>
 #include <sopa/sopa-node.h>
 #include <sopa/sopa-text.h>
+#include <sopa/sopa-version.h>
 
 #undef SOPA_H_INSIDE
 
