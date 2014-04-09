@@ -136,8 +136,22 @@ sopa_node_get_property (GObject    *object,
                         GValue     *value,
                         GParamSpec *pspec)
 {
+  SopaNodePrivate *priv = SOPA_NODE (object)->priv;
+
   switch (property_id)
     {
+    case PROP_NAME:
+      g_value_set_string (value, priv->name);
+      break;
+
+    case PROP_FIRST_CHILD:
+      g_value_set_object (value, priv->first_child);
+      break;
+
+    case PROP_LAST_CHILD:
+      g_value_set_object (value, priv->last_child);
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
     }
@@ -149,8 +163,14 @@ sopa_node_set_property (GObject      *object,
                         const GValue *value,
                         GParamSpec   *pspec)
 {
+  SopaNode *node = SOPA_NODE (object);
+
   switch (property_id)
     {
+    case PROP_NAME:
+      sopa_node_set_name (node, g_value_get_string (value));
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
     }
