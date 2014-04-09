@@ -100,6 +100,9 @@ GType sopa_node_get_type (void) G_GNUC_CONST;
 
 SopaNode *                          sopa_node_new                               (void);
 void                                sopa_node_destroy                           (SopaNode                 *self);
+void                                sopa_node_set_name                          (SopaNode                 *self,
+                                                                                 const gchar              *name);
+const gchar *                       sopa_node_get_name                          (SopaNode                 *self);
 void                                sopa_node_add_child                         (SopaNode                 *self,
                                                                                  SopaNode                 *child);
 void                                sopa_node_add_child_at_index                (SopaNode                 *self,

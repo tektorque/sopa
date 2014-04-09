@@ -320,6 +320,43 @@ sopa_node_destroy (SopaNode *self)
   g_object_unref (self);
 }
 
+/**
+ * sopa_node_set_name:
+ * @self: A #SopaNode
+ * @name: Textual tag to apply to actor
+ *
+ * Sets the given name to @self. The name can be used to identify
+ * a #SopaNode.
+ */
+void
+sopa_node_set_name (SopaNode    *self,
+                    const gchar *name)
+{
+  g_return_if_fail (SOPA_IS_NODE (self));
+
+  g_free (self->priv->name);
+  self->priv->name = g_strdup (name);
+
+  g_object_notify_by_pspec (G_OBJECT (self), obj_props[PROP_NAME]);
+}
+
+/**
+ * sopa_node_get_name:
+ * @self: A #SopaNode
+ *
+ * Retrieves the name of @self.
+ *
+ * Return value: the name of the actor, or %NULL. The returned string is
+ *   owned by the node and should not be modified or freed.
+ */
+const gchar *
+sopa_node_get_name (SopaNode *self)
+{
+  g_return_val_if_fail (SOPA_IS_NODE (self), NULL);
+
+  return self->priv->name;
+}
+
 static inline void
 remove_child (SopaNode *self,
               SopaNode *child)
