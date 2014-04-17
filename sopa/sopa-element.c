@@ -29,8 +29,19 @@ G_DEFINE_TYPE (SopaElement, sopa_element, SOPA_TYPE_NODE)
 
 struct _SopaElementPrivate
 {
+  gchar         *tag;
+  GHashTable    *attributes;
 };
 
+enum {
+  PROP_0,
+
+  PROP_TAG,
+
+  PROP_LAST
+};
+
+static GParamSpec *obj_props[PROP_LAST];
 
 static void
 sopa_element_get_property (GObject    *object,
@@ -38,8 +49,14 @@ sopa_element_get_property (GObject    *object,
                            GValue     *value,
                            GParamSpec *pspec)
 {
+  SopaElement *elem = SOPA_ELEMENT (object);
+
   switch (property_id)
     {
+    case PROP_TAG:
+      g_value_set_string (value, elem->priv->tag);
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
     }
@@ -51,8 +68,15 @@ sopa_element_set_property (GObject      *object,
                            const GValue *value,
                            GParamSpec   *pspec)
 {
+  SopaElement *elem = SOPA_ELEMENT (object);
+
   switch (property_id)
     {
+    case PROP_TAG:
+      g_free (elem->priv->tag);
+      elem->priv->tag = g_value_dup_string (value);
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
     }
@@ -61,6 +85,14 @@ sopa_element_set_property (GObject      *object,
 static void
 sopa_element_dispose (GObject *object)
 {
+  SopaElement *elem = SOPA_ELEMENT (object);
+
+  if (elem->priv->tag != NULL)
+    {
+      g_object_unref (elem->priv->tag);
+      elem->priv->tag = NULL;
+    }
+
   G_OBJECT_CLASS (sopa_element_parent_class)->dispose (object);
 }
 
@@ -81,16 +113,44 @@ sopa_element_class_init (SopaElementClass *klass)
   object_class->set_property = sopa_element_set_property;
   object_class->dispose = sopa_element_dispose;
   object_class->finalize = sopa_element_finalize;
+
+  /**
+   * SopaElement:tag:
+   *
+   * The element's tag
+   *
+   * Since: 0.2
+   */
+  obj_props[PROP_TAG] =
+    g_param_spec_string ("tag",
+                         "Element tag",
+                         "The element's tag",
+                         NULL,
+                         G_PARAM_CONSTRUCT_ONLY |
+                         G_PARAM_READWRITE);
+
+  g_object_class_install_properties (object_class, PROP_LAST, obj_props);
 }
 
 static void
 sopa_element_init (SopaElement *self)
 {
-  self->priv = ELEMENT_PRIVATE (self);
+  SopaElementPrivate *priv;
+
+  priv = self->priv = ELEMENT_PRIVATE (self);
+
+  priv->attributes = g_hash_table_new_full (g_str_hash,
+                                            g_str_equal,
+                                            g_free,
+                                            g_free);
 }
 
-SopaElement *
-sopa_element_new (void)
+SopaNode *
+sopa_element_new (const gchar *tag)
 {
-  return g_object_new (SOPA_TYPE_ELEMENT, NULL);
+  g_return_val_if_fail (tag != NULL, NULL);
+
+  return g_object_new (SOPA_TYPE_ELEMENT,
+                       "tag", tag,
+                       NULL);
 }

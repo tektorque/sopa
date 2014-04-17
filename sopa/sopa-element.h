@@ -72,7 +72,7 @@ struct _SopaElementClass
 
 GType sopa_element_get_type (void) G_GNUC_CONST;
 
-SopaElement *sopa_element_new (void);
+SopaNode *                          sopa_element_new                            (const gchar                *tag);
 
 G_END_DECLS
 
