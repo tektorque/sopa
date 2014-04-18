@@ -81,14 +81,12 @@ sopa_text_set_property (GObject      *object,
 }
 
 static void
-sopa_text_dispose (GObject *object)
-{
-  G_OBJECT_CLASS (sopa_text_parent_class)->dispose (object);
-}
-
-static void
 sopa_text_finalize (GObject *object)
 {
+  SopaText *text = SOPA_TEXT (object);
+
+  g_free (text->priv->content);
+
   G_OBJECT_CLASS (sopa_text_parent_class)->finalize (object);
 }
 
@@ -101,7 +99,6 @@ sopa_text_class_init (SopaTextClass *klass)
 
   object_class->get_property = sopa_text_get_property;
   object_class->set_property = sopa_text_set_property;
-  object_class->dispose = sopa_text_dispose;
   object_class->finalize = sopa_text_finalize;
 
   obj_props[PROP_CONTENT] =
