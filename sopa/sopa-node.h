@@ -98,26 +98,10 @@ struct _SopaNodeIter {
 
 GType sopa_node_get_type (void) G_GNUC_CONST;
 
-SopaNode *                          sopa_node_new                               (void);
 void                                sopa_node_destroy                           (SopaNode                 *self);
 void                                sopa_node_set_name                          (SopaNode                 *self,
                                                                                  const gchar              *name);
 const gchar *                       sopa_node_get_name                          (SopaNode                 *self);
-void                                sopa_node_add_child                         (SopaNode                 *self,
-                                                                                 SopaNode                 *child);
-void                                sopa_node_add_child_at_index                (SopaNode                 *self,
-                                                                                 SopaNode                 *child,
-                                                                                 gint                      index_);
-void                                sopa_node_insert_child_above                (SopaNode                 *self,
-                                                                                 SopaNode                 *child,
-                                                                                 SopaNode                 *sibling);
-void                                sopa_node_insert_child_below                (SopaNode                 *self,
-                                                                                 SopaNode                 *child,
-                                                                                 SopaNode                 *sibling);
-void                                sopa_node_remove_child                      (SopaNode                 *self,
-                                                                                 SopaNode                 *child);
-void                                sopa_node_remove_all_children               (SopaNode                 *self);
-void                                sopa_node_destroy_all_children              (SopaNode                 *self);
 SopaNode *                          sopa_node_get_parent                        (SopaNode                 *self);
 void                                sopa_node_iter_init                         (SopaNodeIter             *iter,
                                                                                  SopaNode                 *root);

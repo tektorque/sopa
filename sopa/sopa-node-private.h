@@ -27,7 +27,22 @@
 
 G_BEGIN_DECLS
 
-//TODO
+/* "protected" methods for subclasses */
+void                                sopa_node_add_child                         (SopaNode                 *self,
+                                                                                 SopaNode                 *child);
+void                                sopa_node_insert_child_at_index             (SopaNode                 *self,
+                                                                                 SopaNode                 *child,
+                                                                                 gint                      index_);
+void                                sopa_node_insert_child_above                (SopaNode                 *self,
+                                                                                 SopaNode                 *child,
+                                                                                 SopaNode                 *sibling);
+void                                sopa_node_insert_child_below                (SopaNode                 *self,
+                                                                                 SopaNode                 *child,
+                                                                                 SopaNode                 *sibling);
+void                                sopa_node_remove_child                      (SopaNode                 *self,
+                                                                                 SopaNode                 *child);
+void                                sopa_node_remove_all_children               (SopaNode                 *self);
+void                                sopa_node_destroy_all_children              (SopaNode                 *self);
 
 G_END_DECLS
 
