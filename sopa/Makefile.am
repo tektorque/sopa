@@ -13,6 +13,7 @@ source_h = \
   $(top_srcdir)/sopa/sopa-document.h    \
   $(top_srcdir)/sopa/sopa-element.h     \
   $(top_srcdir)/sopa/sopa-node.h        \
+  $(top_srcdir)/sopa/sopa-parser.h      \
   $(top_srcdir)/sopa/sopa-text.h        \
   $(NULL)
 
@@ -26,6 +27,7 @@ source_c = \
   $(top_srcdir)/sopa/sopa-document.c    \
   $(top_srcdir)/sopa/sopa-element.c     \
   $(top_srcdir)/sopa/sopa-node.c        \
+  $(top_srcdir)/sopa/sopa-parser.c      \
   $(top_srcdir)/sopa/sopa-text.c        \
   $(NULL)
 
@@ -140,7 +142,7 @@ Sopa_@SOPA_API_VERSION_AM@_gir_FILES     = \
 	$(top_builddir)/sopa/sopa-enum-types.h \
 	$(source_c)
 Sopa_@SOPA_API_VERSION_AM@_gir_CFLAGS = $(common_includes)
-Sopa_@SOPA_API_VERSION_AM@_gir_INCLUDES = GObject-2.0
+Sopa_@SOPA_API_VERSION_AM@_gir_INCLUDES = GObject-2.0 Gio-2.0
 Sopa_@SOPA_API_VERSION_AM@_gir_SCANNERFLAGS = \
 	--warn-all \
 	--c-include='sopa/sopa.h' \

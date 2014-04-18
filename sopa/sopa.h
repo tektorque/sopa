@@ -29,6 +29,7 @@
 #include <sopa/sopa-enum-types.h>
 #include <sopa/sopa-macros.h>
 #include <sopa/sopa-node.h>
+#include <sopa/sopa-parser.h>
 #include <sopa/sopa-text.h>
 #include <sopa/sopa-version.h>
 
