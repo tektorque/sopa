@@ -88,6 +88,19 @@ void                                sopa_element_remove_child                   
                                                                                  SopaNode                   *child);
 void                                sopa_element_remove_all_children            (SopaElement                *self);
 void                                sopa_element_destroy_all_children           (SopaElement                *self);
+void                                sopa_element_add_attribute                  (SopaElement                *self,
+                                                                                 const gchar                *key,
+                                                                                 const gchar                *value);
+gboolean                            sopa_element_remove_attribute               (SopaElement                *self,
+                                                                                 const gchar                *key);
+void                                sopa_element_set_attribute                  (SopaElement                *self,
+                                                                                 const gchar                *key,
+                                                                                 const gchar                *value);
+const gchar *                       sopa_element_get_attribute                  (SopaElement                *self,
+                                                                                 const gchar                *key);
+guint                               sopa_element_get_n_attributes               (SopaElement                *self);
+gboolean                            sopa_element_has_attribute                  (SopaElement                *self,
+                                                                                 const gchar                *key);
 
 G_END_DECLS
 

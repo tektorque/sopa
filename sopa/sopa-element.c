@@ -334,3 +334,131 @@ sopa_element_destroy_all_children (SopaElement *self)
 
   sopa_node_destroy_all_children (SOPA_NODE (self));
 }
+
+/**
+ * sopa_element_add_attribute:
+ * @self: a #SopaElement
+ * @key: the attribute name
+ * @value: the attribute value
+ *
+ * Adds a new @key and @value to the #SopaElement attributes
+ *
+ * If the @key already exists in the #SopaElement its current value is replaced
+ * with a new @value
+ */
+void
+sopa_element_add_attribute (SopaElement *self,
+                            const gchar *key,
+                            const gchar *value)
+{
+  g_return_if_fail (SOPA_IS_ELEMENT (self));
+  g_return_if_fail (key != NULL);
+  g_return_if_fail (value != NULL);
+
+  g_hash_table_insert (self->priv->attributes,
+                       (gpointer) g_strdup (key),
+                       (gpointer) g_strdup (value));
+}
+
+/**
+ * sopa_element_remove_attribute:
+ * @self: a #SopaElement
+ * @key: the attribute to remove
+ *
+ * Removes an attribute ans its associated value from a #SopaElement
+ *
+ * Return value: %TRUE if the attribute was found and removed from
+ *      the #SopaElement, %FALSE otherwise
+ */
+gboolean
+sopa_element_remove_attribute (SopaElement *self,
+                               const gchar *key)
+{
+  g_return_if_fail (SOPA_IS_ELEMENT (self));
+  g_return_if_fail (key != NULL);
+
+  return g_hash_table_remove (self->priv->attributes,
+                              (gconstpointer) key);
+}
+
+/**
+ * sopa_element_set_attribute:
+ * @self: a #SopaElement
+ * @key: the attribute name
+ * @value: the attribute value
+ *
+ * Sets @key attribute value in the #SopaElement
+ *
+ * If the @key doesn't exists in the #SopaElement its creates a new attribute
+ * with @key and @value
+ */
+void
+sopa_element_set_attribute (SopaElement *self,
+                            const gchar *key,
+                            const gchar *value)
+{
+  g_return_if_fail (SOPA_IS_ELEMENT (self));
+  g_return_if_fail (key != NULL);
+  g_return_if_fail (value != NULL);
+
+  g_hash_table_insert (self->priv->attributes,
+                       (gpointer) g_strdup (key),
+                       (gpointer) g_strdup (value));
+}
+
+/**
+ * sopa_element_get_attribute:
+ * @self: a #SopaElement
+ * @key: the attribute name
+ *
+ * Retrieves the attribute value
+ *
+ * Return value: (transfer none): the associated value, or %NULL if the
+ *      attribute is not found
+ */
+const gchar *
+sopa_element_get_attribute (SopaElement *self,
+                            const gchar *key)
+{
+  g_return_if_fail (SOPA_IS_ELEMENT (self));
+  g_return_if_fail (key != NULL);
+
+  return g_hash_table_lookup (self->priv->attributes,
+                              (gconstpointer) key);
+}
+
+/**
+ * sopa_element_get_n_attributes:
+ * @self: a #SopaElement
+ *
+ * Retrieves the number of attributes of @self
+ *
+ * Return value: the number of attributes of an element
+ */
+guint
+sopa_element_get_n_attributes (SopaElement *self)
+{
+  g_return_if_fail (SOPA_IS_ELEMENT (self));
+
+  return g_hash_table_size (self->priv->attributes);
+}
+
+/**
+ * sopa_element_has_attribute:
+ * @self: a #SopaElement
+ * @key: the attribute name
+ *
+ * Returns whether the element has an attribute name equals to @key
+ *
+ * Return value: %TRUE if the element has @key attribute, %FALSE otherwise
+ */
+gboolean
+sopa_element_has_attribute (SopaElement *self,
+                            const gchar *key)
+{
+  g_return_if_fail (SOPA_IS_ELEMENT (self));
+  g_return_if_fail (key != NULL);
+
+  return g_hash_table_contains (self->priv->attributes,
+                                (gconstpointer) key);
+}
