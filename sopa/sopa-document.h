@@ -28,7 +28,7 @@
 #define __SOPA_DOCUMENT_H__
 
 #include <glib-object.h>
-#include <sopa/sopa-node.h>
+#include <sopa/sopa-element.h>
 
 G_BEGIN_DECLS
 
@@ -100,14 +100,14 @@ typedef enum { /*< PREFIX=SOPA_DOCUMENT_TYPE >*/
 
 struct _SopaDocument
 {
-  SopaNode parent;
+  SopaElement parent;
 
   SopaDocumentPrivate *priv;
 };
 
 struct _SopaDocumentClass
 {
-  SopaNodeClass parent_class;
+  SopaElementClass parent_class;
 };
 
 GType sopa_document_get_type (void) G_GNUC_CONST;

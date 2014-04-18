@@ -22,7 +22,7 @@
 
 #include "sopa-document.h"
 
-G_DEFINE_TYPE (SopaDocument, sopa_document, SOPA_TYPE_NODE)
+G_DEFINE_TYPE (SopaDocument, sopa_document, SOPA_TYPE_ELEMENT)
 
 #define DOCUMENT_PRIVATE(o) \
   (G_TYPE_INSTANCE_GET_PRIVATE ((o), SOPA_TYPE_DOCUMENT, SopaDocumentPrivate))
