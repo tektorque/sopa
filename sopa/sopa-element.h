@@ -72,7 +72,22 @@ struct _SopaElementClass
 
 GType sopa_element_get_type (void) G_GNUC_CONST;
 
-SopaNode *                          sopa_element_new                            (const gchar                *tag);
+SopaElement *                       sopa_element_new                            (const gchar                *tag);
+void                                sopa_element_add_child                      (SopaElement                *self,
+                                                                                 SopaNode                   *child);
+void                                sopa_element_add_child_at_index             (SopaElement                *self,
+                                                                                 SopaNode                   *child,
+                                                                                 gint                        index_);
+void                                sopa_element_insert_child_above             (SopaElement                *self,
+                                                                                 SopaNode                   *child,
+                                                                                 SopaNode                   *sibling);
+void                                sopa_element_insert_child_below             (SopaElement                *self,
+                                                                                 SopaNode                   *child,
+                                                                                 SopaNode                   *sibling);
+void                                sopa_element_remove_child                   (SopaElement                *self,
+                                                                                 SopaNode                   *child);
+void                                sopa_element_remove_all_children            (SopaElement                *self);
+void                                sopa_element_destroy_all_children           (SopaElement                *self);
 
 G_END_DECLS
 
