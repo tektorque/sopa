@@ -17,6 +17,7 @@ source_h = \
   $(NULL)
 
 source_h_priv = \
+  $(top_srcdir)/sopa/sopa-node-private.h\
   $(NULL)
 
 source_c = \
