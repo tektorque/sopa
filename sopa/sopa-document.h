@@ -60,6 +60,7 @@ typedef struct _SopaDocumentPrivate SopaDocumentPrivate;
 
 /**
  * SopaDocumentType:
+ * @SOPA_DOCUMENT_TYPE_UNKNOWN: Unknown document type
  * @SOPA_DOCUMENT_TYPE_HTML_401_STRICT: This DTD contains all HTML elements
  * and attributes, but does NOT INCLUDE presentational or deprecated
  * elements (like font). Framesets are not allowed.
@@ -88,14 +89,15 @@ typedef struct _SopaDocumentPrivate SopaDocumentPrivate;
  * Since: 0.2
  */
 typedef enum { /*< PREFIX=SOPA_DOCUMENT_TYPE >*/
-  SOPA_DOCUMENT_TYPE_HTML_401_STRICT        = (1 << 0),
-  SOPA_DOCUMENT_TYPE_HTML_401_TRANSITIONAL  = (1 << 1),
-  SOPA_DOCUMENT_TYPE_HTML_401_FRAMESET      = (1 << 2),
-  SOPA_DOCUMENT_TYPE_XHTML_10_STRICT        = (1 << 3),
-  SOPA_DOCUMENT_TYPE_XHTML_10_TRANSITIONAL  = (1 << 4),
-  SOPA_DOCUMENT_TYPE_XHTML_10_FRAMESET      = (1 << 5),
-  SOPA_DOCUMENT_TYPE_XHTML_11               = (1 << 6),
-  SOPA_DOCUMENT_TYPE_HTML_5                 = (1 << 7)
+  SOPA_DOCUMENT_TYPE_UNKNOWN,
+  SOPA_DOCUMENT_TYPE_HTML_401_STRICT,
+  SOPA_DOCUMENT_TYPE_HTML_401_TRANSITIONAL,
+  SOPA_DOCUMENT_TYPE_HTML_401_FRAMESET,
+  SOPA_DOCUMENT_TYPE_XHTML_10_STRICT,
+  SOPA_DOCUMENT_TYPE_XHTML_10_TRANSITIONAL,
+  SOPA_DOCUMENT_TYPE_XHTML_10_FRAMESET,
+  SOPA_DOCUMENT_TYPE_XHTML_11,
+  SOPA_DOCUMENT_TYPE_HTML_5
 } SopaDocumentType;
 
 struct _SopaDocument

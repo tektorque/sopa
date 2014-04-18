@@ -29,6 +29,7 @@ G_DEFINE_TYPE (SopaDocument, sopa_document, SOPA_TYPE_ELEMENT)
 
 struct _SopaDocumentPrivate
 {
+  SopaDocumentType    type;
 };
 
 
