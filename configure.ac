@@ -174,6 +174,7 @@ AC_CONFIG_FILES([
   sopa.pc
   sopa/sopa-version.h
   sopa/Makefile
+  tests/Makefile
 ])
 
 AC_OUTPUT

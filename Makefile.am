@@ -1,4 +1,4 @@
-SUBDIRS = sopa
+SUBDIRS = sopa tests
 
 ACLOCAL_AMFLAGS = -I m4
 
