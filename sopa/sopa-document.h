@@ -29,6 +29,7 @@
 
 #include <glib-object.h>
 #include <sopa/sopa-element.h>
+#include <sopa/sopa-enum-types.h>
 
 G_BEGIN_DECLS
 

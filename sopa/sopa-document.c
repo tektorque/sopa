@@ -29,9 +29,18 @@ G_DEFINE_TYPE (SopaDocument, sopa_document, SOPA_TYPE_ELEMENT)
 
 struct _SopaDocumentPrivate
 {
-  SopaDocumentType    type;
+  SopaDocumentType    doctype;
 };
 
+enum {
+  PROP_0,
+
+  PROP_DOCTYPE,
+
+  PROP_LAST
+};
+
+static GParamSpec *obj_props[PROP_LAST];
 
 static void
 sopa_document_get_property (GObject    *object,
@@ -39,8 +48,14 @@ sopa_document_get_property (GObject    *object,
                             GValue     *value,
                             GParamSpec *pspec)
 {
+  SopaDocument *doc = SOPA_DOCUMENT (object);
+
   switch (property_id)
     {
+    case PROP_DOCTYPE:
+      g_value_set_enum (value, doc->priv->doctype);
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
     }
@@ -52,8 +67,14 @@ sopa_document_set_property (GObject      *object,
                             const GValue *value,
                             GParamSpec   *pspec)
 {
+  SopaDocument *doc = SOPA_DOCUMENT (object);
+
   switch (property_id)
     {
+    case PROP_DOCTYPE:
+      doc->priv->doctype = g_value_get_enum (value);
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
     }
@@ -82,6 +103,17 @@ sopa_document_class_init (SopaDocumentClass *klass)
   object_class->set_property = sopa_document_set_property;
   object_class->dispose = sopa_document_dispose;
   object_class->finalize = sopa_document_finalize;
+
+  obj_props[PROP_DOCTYPE] =
+    g_param_spec_enum ("doctype",
+                       "Document type",
+                       "The document's type",
+                       SOPA_TYPE_DOCUMENT_TYPE,
+                       SOPA_DOCUMENT_TYPE_UNKNOWN,
+                       G_PARAM_CONSTRUCT |
+                       G_PARAM_READWRITE);
+
+  g_object_class_install_properties (object_class, PROP_LAST, obj_props);
 }
 
 static void
