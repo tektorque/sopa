@@ -31,9 +31,10 @@
  */
 
 #include "sopa-node.h"
+#include "sopa-node-private.h"
 #include "sopa-marshal.h"
 
-G_DEFINE_TYPE (SopaNode, sopa_node, G_TYPE_INITIALLY_UNOWNED)
+G_DEFINE_ABSTRACT_TYPE (SopaNode, sopa_node, G_TYPE_INITIALLY_UNOWNED)
 
 #define NODE_PRIVATE(o) \
   (G_TYPE_INSTANCE_GET_PRIVATE ((o), SOPA_TYPE_NODE, SopaNodePrivate))
@@ -301,26 +302,8 @@ sopa_node_init (SopaNode *self)
 }
 
 /**
- * sopa_node_new:
- *
- * Creates a new #SopaNode.
- *
- * A newly created node has a floating reference, which will be sunk
- * when it is added to another node.
- *
- * Return value: the newly created #SopaNode
- *
- * Since: 0.2
- */
-SopaNode *
-sopa_node_new (void)
-{
-  return g_object_new (SOPA_TYPE_NODE, NULL);
-}
-
-/**
  * sopa_node_destroy:
- * @self: a #ClutterActor
+ * @self: a #SopaNode
  *
  * Destroys a node.  When a node is destroyed, it will break any
  * references it holds to other objects.  If the node is inside a
