@@ -680,9 +680,9 @@ sopa_node_add_child (SopaNode *self,
  * Since: 0.2
  */
 void
-sopa_node_add_child_at_index (SopaNode *self,
-                              SopaNode *child,
-                              gint index_)
+sopa_node_insert_child_at_index (SopaNode *self,
+                                 SopaNode *child,
+                                 gint index_)
 {
   g_return_if_fail (SOPA_IS_NODE (self));
   g_return_if_fail (SOPA_IS_NODE (child));
@@ -842,7 +842,7 @@ sopa_node_remove_all_children (SopaNode *self)
  * By default, #SopaNode will emit the #SopaNode::destroy signal
  * when its reference count drops to 0; the default handler of the
  * #SopaNode::destroy signal will destroy all the children of an
- * actor. This function ensures that all children are destroyed, instead
+ * node. This function ensures that all children are destroyed, instead
  * of just removed from @self, unlike sopa_node_remove_all_children()
  * which will merely release the reference and remove each child.
  *
