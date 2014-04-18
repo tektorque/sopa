@@ -72,7 +72,10 @@ struct _SopaTextClass
 
 GType sopa_text_get_type (void) G_GNUC_CONST;
 
-SopaText *sopa_text_new (void);
+SopaText *                          sopa_text_new                               (void);
+void                                sopa_text_set_content                       (SopaText               *self,
+                                                                                 const gchar            *content);
+const gchar *                       sopa_text_get_content                       (SopaText               *self);
 
 G_END_DECLS
 

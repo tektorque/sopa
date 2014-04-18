@@ -29,8 +29,18 @@ G_DEFINE_TYPE (SopaText, sopa_text, SOPA_TYPE_NODE)
 
 struct _SopaTextPrivate
 {
+  gchar *content;
 };
 
+enum {
+  PROP_0,
+
+  PROP_CONTENT,
+
+  PROP_LAST
+};
+
+static GParamSpec *obj_props[PROP_LAST];
 
 static void
 sopa_text_get_property (GObject    *object,
@@ -38,8 +48,14 @@ sopa_text_get_property (GObject    *object,
                         GValue     *value,
                         GParamSpec *pspec)
 {
+  SopaText *text = SOPA_TEXT (object);
+
   switch (property_id)
     {
+    case PROP_CONTENT:
+      g_value_set_string (value, text->priv->content);
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
     }
@@ -51,8 +67,14 @@ sopa_text_set_property (GObject      *object,
                         const GValue *value,
                         GParamSpec   *pspec)
 {
+  SopaText *text = SOPA_TEXT (object);
+
   switch (property_id)
     {
+    case PROP_CONTENT:
+      sopa_text_set_content (text, g_value_get_string (value));
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
     }
@@ -81,6 +103,15 @@ sopa_text_class_init (SopaTextClass *klass)
   object_class->set_property = sopa_text_set_property;
   object_class->dispose = sopa_text_dispose;
   object_class->finalize = sopa_text_finalize;
+
+  obj_props[PROP_CONTENT] =
+    g_param_spec_string ("content",
+                         "Content",
+                         "The text node content",
+                         NULL,
+                         G_PARAM_READWRITE);
+
+  g_object_class_install_properties (object_class, PROP_LAST, obj_props);
 }
 
 static void
@@ -89,8 +120,56 @@ sopa_text_init (SopaText *self)
   self->priv = TEXT_PRIVATE (self);
 }
 
+/**
+ * sopa_text_new:
+ *
+ * Creates a new #SopaText.
+ *
+ * A newly created element has a floating reference, which will be sunk
+ * when it is added to another element.
+ *
+ * Return value: the newly created #SopaText
+ */
 SopaText *
 sopa_text_new (void)
 {
   return g_object_new (SOPA_TYPE_TEXT, NULL);
+}
+
+/**
+ * sopa_text_set_content:
+ * @self: a #SopaText
+ * @content: the content
+ *
+ * Sets content of @self
+ */
+void
+sopa_text_set_content (SopaText *self,
+                       const gchar *content)
+{
+  g_return_if_fail (SOPA_IS_TEXT (self));
+
+  g_free (self->priv->content);
+
+  if (content != NULL)
+    self->priv->content = g_strdup (content);
+  else
+    self->priv->content = NULL;
+}
+
+/**
+ * sopa_text_get_content:
+ * @self: a #SopaText
+ *
+ * Retrieves the @self content
+ *
+ * Return value: (transfer none): the content of node. The returned value
+ *      is owned by element and should not be modified or freed
+ */
+const gchar *
+sopa_text_get_content (SopaText *self)
+{
+  g_return_val_if_fail (SOPA_IS_TEXT (self), NULL);
+
+  return self->priv->content;
 }
