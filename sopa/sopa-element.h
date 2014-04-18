@@ -73,6 +73,7 @@ struct _SopaElementClass
 GType sopa_element_get_type (void) G_GNUC_CONST;
 
 SopaElement *                       sopa_element_new                            (const gchar                *tag);
+const gchar *                       sopa_element_get_tag                        (SopaElement                *self);
 void                                sopa_element_add_child                      (SopaElement                *self,
                                                                                  SopaNode                   *child);
 void                                sopa_element_add_child_at_index             (SopaElement                *self,

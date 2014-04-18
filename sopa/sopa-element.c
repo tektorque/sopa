@@ -166,6 +166,23 @@ sopa_element_new (const gchar *tag)
 }
 
 /**
+ * sopa_element_get_tag:
+ * @self: a #SopaElement
+ *
+ * Retrieves the tag name of @self
+ *
+ * Return value: (transfer none): the tag name of element. The returned value
+ *      is owned by element and should not be modified or freed
+ */
+const gchar *
+sopa_element_get_tag (SopaElement *self)
+{
+  g_return_val_if_fail (SOPA_IS_ELEMENT (self), NULL);
+
+  return self->priv->tag;
+}
+
+/**
  * sopa_element_add_child:
  * @self: a #SopaElement
  * @child: a #SopaNode
