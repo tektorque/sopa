@@ -76,7 +76,8 @@ sopa_element_set_property (GObject      *object,
     {
     case PROP_TAG:
       g_free (elem->priv->tag);
-      elem->priv->tag = g_value_dup_string (value);
+      elem->priv->tag = g_ascii_strdown (g_value_get_string (value),
+                                         -1);
       break;
 
     default:
