@@ -86,22 +86,14 @@ sopa_element_set_property (GObject      *object,
 }
 
 static void
-sopa_element_dispose (GObject *object)
+sopa_element_finalize (GObject *object)
 {
   SopaElement *elem = SOPA_ELEMENT (object);
 
-  if (elem->priv->tag != NULL)
-    {
-      g_object_unref (elem->priv->tag);
-      elem->priv->tag = NULL;
-    }
+  g_hash_table_destroy (elem->priv->attributes);
 
-  G_OBJECT_CLASS (sopa_element_parent_class)->dispose (object);
-}
+  g_free (elem->priv->tag);
 
-static void
-sopa_element_finalize (GObject *object)
-{
   G_OBJECT_CLASS (sopa_element_parent_class)->finalize (object);
 }
 
@@ -114,7 +106,6 @@ sopa_element_class_init (SopaElementClass *klass)
 
   object_class->get_property = sopa_element_get_property;
   object_class->set_property = sopa_element_set_property;
-  object_class->dispose = sopa_element_dispose;
   object_class->finalize = sopa_element_finalize;
 
   /**
