@@ -120,8 +120,6 @@ sopa_element_class_init (SopaElementClass *klass)
    * SopaElement:tag:
    *
    * The element's tag
-   *
-   * Since: 0.2
    */
   obj_props[PROP_TAG] =
     g_param_spec_string ("tag",
@@ -156,8 +154,6 @@ sopa_element_init (SopaElement *self)
  * when it is added to another element.
  *
  * Return value: the newly created #SopaElement
- *
- * Since: 0.2
  */
 SopaElement *
 sopa_element_new (const gchar *tag)
@@ -178,8 +174,6 @@ sopa_element_new (const gchar *tag)
  *
  * This function will acquire a reference on @child that will only
  * be released when calling sopa_element_remove_child().
- *
- * Since: 0.2
  */
 void
 sopa_element_add_child (SopaElement *self,
@@ -202,8 +196,6 @@ sopa_element_add_child (SopaElement *self,
  *
  * This function will acquire a reference on @child that will only
  * be released when calling sopa_element_remove_child().
- *
- * Since: 0.2
  */
 void
 sopa_element_insert_child_at_index (SopaElement *self,
@@ -229,8 +221,6 @@ sopa_element_insert_child_at_index (SopaElement *self,
  *
  * This function will acquire a reference on @child that will only
  * be released when calling sopa_element_remove_child().
- *
- * Since: 0.2
  */
 void
 sopa_element_insert_child_above (SopaElement  *self,
@@ -256,8 +246,6 @@ sopa_element_insert_child_above (SopaElement  *self,
  *
  * This function will acquire a reference on @child that will only
  * be released when calling sopa_element_remove_child().
- *
- * Since: 0.2
  */
 void
 sopa_element_insert_child_below (SopaElement  *self,
@@ -282,8 +270,6 @@ sopa_element_insert_child_below (SopaElement  *self,
  * sopa_element_add_child(), so if you want to keep using @child
  * you will have to acquire a referenced on it before calling this
  * function.
- *
- * Since: 0.2
  */
 void
 sopa_element_remove_child (SopaElement *self,
@@ -307,8 +293,6 @@ sopa_element_remove_child (SopaElement *self,
  * If the reference count of a child drops to zero, the child will be
  * destroyed. If you want to ensure the destruction of all the children
  * of @self, use sopa_element_destroy_all_children().
- *
- * Since: 0.2
  */
 void
 sopa_element_remove_all_children (SopaElement *self)
@@ -342,8 +326,6 @@ sopa_element_remove_all_children (SopaElement *self)
  * order to make sure that children are destroyed and signal handlers
  * are disconnected even in cases where circular references prevent this
  * from automatically happening through reference counting alone.
- *
- * Since: 0.2
  */
 void
 sopa_element_destroy_all_children (SopaElement *self)
