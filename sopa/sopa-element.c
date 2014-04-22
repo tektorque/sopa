@@ -23,6 +23,7 @@
 #include "sopa-element.h"
 
 #include "sopa-node-private.h"
+#include "sopa-text.h"
 
 G_DEFINE_TYPE (SopaElement, sopa_element, SOPA_TYPE_NODE)
 
@@ -470,4 +471,90 @@ sopa_element_has_attribute (SopaElement *self,
 
   return g_hash_table_contains (self->priv->attributes,
                                 (gconstpointer) key);
+}
+
+static void
+element_to_string (SopaElement *element,
+                   GString *buffer,
+                   guint cur_indent,
+                   guint indent_width)
+{
+  SopaNodeIter iter;
+  GHashTableIter attr_iter;
+  gpointer attr_key, attr_value;
+  SopaNode *child;
+  gint i;
+  sopa_node_iter_init (&iter, SOPA_NODE (element));
+  while (sopa_node_iter_next (&iter, &child))
+    {
+      /* Indent */
+      if (cur_indent > 0)
+        buffer = g_string_append_c (buffer, '\n');
+      for (i = 0; i < cur_indent; i++)
+        {
+          buffer = g_string_append_c (buffer, 0x20);
+        }
+
+      if (SOPA_IS_ELEMENT (child))
+        {
+          /* Tag begin */
+          g_string_append_printf (buffer, "<%s", SOPA_ELEMENT (child)->priv->tag);
+
+          /* Attributes */
+          g_hash_table_iter_init (&attr_iter,
+                                  SOPA_ELEMENT (child)->priv->attributes);
+          while (g_hash_table_iter_next (&attr_iter, &attr_key, &attr_value))
+            {
+              g_string_append_printf (buffer,
+                                      " %s=\"%s\"",
+                                      (gchar *) attr_key,
+                                      (gchar *) attr_value);
+            }
+          buffer = g_string_append_c (buffer, '>');
+
+          /* Childs */
+          if (sopa_node_get_n_children (child) > 0)
+            {
+              element_to_string (SOPA_ELEMENT (child),
+                                 buffer, cur_indent + indent_width,
+                                 indent_width);
+            }
+
+          /* Tag end */
+          buffer = g_string_append_c (buffer, '\n');
+          for (i = 0; i < cur_indent; i++)
+            {
+              buffer = g_string_append_c (buffer, 0x20);
+            }
+          g_string_append_printf (buffer, "</%s>", SOPA_ELEMENT (child)->priv->tag);
+        }
+      else if (SOPA_IS_TEXT (child))
+        {
+          buffer = g_string_append (buffer, sopa_text_get_content (SOPA_TEXT (child)));
+        }
+    }
+}
+
+/**
+ * sopa_element_to_string:
+ * @self: a #SopaElement
+ * @indent_width: number of spaces
+ *
+ * Converts a #SopaElement to string
+ *
+ * Return value: (transfer full): a newly allocated string if successful,
+ * or %NULL otherwise. The returned string is owned by caller and must free it
+ * after use with #g_free().
+ */
+gchar *
+sopa_element_to_string (SopaElement *self,
+                        guint        indent_width)
+{
+  g_return_if_fail (SOPA_IS_ELEMENT (self));
+  GString *buffer;
+
+  buffer = g_string_new ("");
+  element_to_string (self, buffer, 0, indent_width);
+
+  return g_string_free (buffer, FALSE);
 }

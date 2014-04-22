@@ -102,6 +102,8 @@ const gchar *                       sopa_element_get_attribute                  
 guint                               sopa_element_get_n_attributes               (SopaElement                *self);
 gboolean                            sopa_element_has_attribute                  (SopaElement                *self,
                                                                                  const gchar                *key);
+gchar *                             sopa_element_to_string                      (SopaElement                *self,
+                                                                                 guint                       indent_width);
 
 G_END_DECLS
 
