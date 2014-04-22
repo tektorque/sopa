@@ -125,5 +125,7 @@ sopa_document_init (SopaDocument *self)
 SopaDocument *
 sopa_document_new (void)
 {
-  return g_object_new (SOPA_TYPE_DOCUMENT, NULL);
+  return g_object_new (SOPA_TYPE_DOCUMENT,
+                       "tag", "__DOCUMENT__",
+                       NULL);
 }
