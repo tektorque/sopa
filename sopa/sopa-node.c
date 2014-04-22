@@ -296,6 +296,7 @@ sopa_node_init (SopaNode *self)
 
   priv->n_children = 0;
   priv->in_destruction = FALSE;
+  priv->age = 0;
 }
 
 /**
@@ -948,7 +949,7 @@ sopa_node_iter_init (SopaNodeIter *iter,
 
   ri->root = root;
   ri->current = NULL;
-  ri->age = 0;
+  ri->age = root->priv->age;
 }
 
 /**
