@@ -240,7 +240,6 @@ sopa_node_class_init (SopaNodeClass *klass)
    *
    * The name of the node
    *
-   * Since: 0.2
    */
   obj_props[PROP_NAME] =
     g_param_spec_string ("name",
@@ -254,7 +253,6 @@ sopa_node_class_init (SopaNodeClass *klass)
    *
    * The node's first child
    *
-   * Since: 0.2
    */
   obj_props[PROP_FIRST_CHILD] =
     g_param_spec_object ("first-child",
@@ -268,7 +266,6 @@ sopa_node_class_init (SopaNodeClass *klass)
    *
    * The node's last child
    *
-   * Since: 0.2
    */
   obj_props[PROP_LAST_CHILD] =
     g_param_spec_object ("last-child",
@@ -311,7 +308,6 @@ sopa_node_init (SopaNode *self)
  *
  * When you destroy a container, its children will be destroyed as well.
  *
- * Since: 0.2
  */
 void
 sopa_node_destroy (SopaNode *self)
@@ -647,7 +643,6 @@ sopa_node_add_child_internal (SopaNode              *self,
  * This function will acquire a reference on @child that will only
  * be released when calling sopa_node_remove_child().
  *
- * Since: 0.2
  */
 void
 sopa_node_add_child (SopaNode *self,
@@ -677,7 +672,6 @@ sopa_node_add_child (SopaNode *self,
  * This function will acquire a reference on @child that will only
  * be released when calling sopa_node_remove_child().
  *
- * Since: 0.2
  */
 void
 sopa_node_insert_child_at_index (SopaNode *self,
@@ -707,7 +701,6 @@ sopa_node_insert_child_at_index (SopaNode *self,
  * This function will acquire a reference on @child that will only
  * be released when calling sopa_node_remove_child().
  *
- * Since: 0.2
  */
 void
 sopa_node_insert_child_above (SopaNode *self,
@@ -741,7 +734,6 @@ sopa_node_insert_child_above (SopaNode *self,
  * This function will acquire a reference on @child that will only
  * be released when calling sopa_node_remove_child().
  *
- * Since: 0.2
  */
 void
 sopa_node_insert_child_below (SopaNode *self,
@@ -774,7 +766,6 @@ sopa_node_insert_child_below (SopaNode *self,
  * you will have to acquire a referenced on it before calling this
  * function.
  *
- * Since: 0.2
  */
 void
 sopa_node_remove_child (SopaNode *self,
@@ -802,7 +793,6 @@ sopa_node_remove_child (SopaNode *self,
  * destroyed. If you want to ensure the destruction of all the children
  * of @self, use sopa_node_destroy_all_children().
  *
- * Since: 0.2
  */
 void
 sopa_node_remove_all_children (SopaNode *self)
@@ -853,7 +843,6 @@ sopa_node_remove_all_children (SopaNode *self)
  * are disconnected even in cases where circular references prevent this
  * from automatically happening through reference counting alone.
  *
- * Since: 0.2
  */
 void
 sopa_node_destroy_all_children (SopaNode *self)
@@ -947,7 +936,6 @@ typedef struct _RealNodeIter
  *     }
  * ]|
  *
- * Since: 0.2
  */
 void
 sopa_node_iter_init (SopaNodeIter *iter,
@@ -975,7 +963,6 @@ sopa_node_iter_init (SopaNodeIter *iter,
  *
  * Return value: %TRUE if the iterator is valid, and %FALSE otherwise
  *
- * Since: 0.2
  */
 gboolean
 sopa_node_iter_is_valid (const SopaNodeIter *iter)
@@ -1006,7 +993,6 @@ sopa_node_iter_is_valid (const SopaNodeIter *iter)
  *
  * Return value: %TRUE if the iterator could advance, and %FALSE otherwise.
  *
- * Since: 0.2
  */
 gboolean
 sopa_node_iter_next (SopaNodeIter   *iter,
@@ -1047,7 +1033,6 @@ sopa_node_iter_next (SopaNodeIter   *iter,
  *
  * Return value: %TRUE if the iterator could advance, and %FALSE otherwise.
  *
- * Since: 0.2
  */
 gboolean
 sopa_node_iter_prev (SopaNodeIter   *iter,
@@ -1085,7 +1070,6 @@ sopa_node_iter_prev (SopaNodeIter   *iter,
  *
  * This function will call sopa_node_remove_child() internally.
  *
- * Since: 0.2
  */
 void
 sopa_node_iter_remove (SopaNodeIter *iter)
@@ -1125,7 +1109,7 @@ sopa_node_iter_remove (SopaNodeIter *iter)
  *
  * This function will call sopa_node_destroy() internally.
  *
- * Since: 0.2
+
  */
 void
 sopa_node_iter_destroy (SopaNodeIter *iter)
