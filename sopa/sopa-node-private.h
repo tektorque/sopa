@@ -43,6 +43,7 @@ void                                sopa_node_remove_child                      
                                                                                  SopaNode                 *child);
 void                                sopa_node_remove_all_children               (SopaNode                 *self);
 void                                sopa_node_destroy_all_children              (SopaNode                 *self);
+gint                                sopa_node_get_n_children                    (SopaNode                 *self);
 
 G_END_DECLS
 

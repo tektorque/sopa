@@ -880,6 +880,22 @@ sopa_node_destroy_all_children (SopaNode *self)
 }
 
 /**
+ * sopa_node_get_n_children:
+ * @self: a #SopaNode
+ *
+ * Retrieves the number of children of @self
+ *
+ * Return value: number of children of a node
+ */
+gint
+sopa_node_get_n_children (SopaNode *self)
+{
+  g_return_val_if_fail (SOPA_IS_NODE (self), 0);
+
+  return self->priv->n_children;
+}
+
+/**
  * sopa_node_get_parent:
  * @self: A #SopaNode
  *
