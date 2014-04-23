@@ -38,33 +38,6 @@ struct _SopaParserPrivate
   GQueue        *stack;
 };
 
-
-static void
-sopa_parser_get_property (GObject    *object,
-                          guint       property_id,
-                          GValue     *value,
-                          GParamSpec *pspec)
-{
-  switch (property_id)
-    {
-    default:
-      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
-    }
-}
-
-static void
-sopa_parser_set_property (GObject      *object,
-                          guint         property_id,
-                          const GValue *value,
-                          GParamSpec   *pspec)
-{
-  switch (property_id)
-    {
-    default:
-      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
-    }
-}
-
 static void
 sopa_parser_finalize (GObject *object)
 {
@@ -84,8 +57,6 @@ sopa_parser_class_init (SopaParserClass *klass)
 
   g_type_class_add_private (klass, sizeof (SopaParserPrivate));
 
-  object_class->get_property = sopa_parser_get_property;
-  object_class->set_property = sopa_parser_set_property;
   object_class->finalize = sopa_parser_finalize;
 }
 
