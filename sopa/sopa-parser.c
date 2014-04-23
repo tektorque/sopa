@@ -20,6 +20,7 @@
  *    Emanuel Fernandes <efernandes@tektorque.com>
  */
 
+#include <string.h>
 #include "sopa-parser.h"
 #include "sopa-element.h"
 #include "sopa-comment.h"
@@ -168,13 +169,18 @@ handle_text (GMarkupParseContext *context,
   SopaText *elem;
   gchar *content;
 
-  elem = sopa_text_new ();
   /* Create a nul-terminated string */
-  content = g_strndup (text, text_len);
-  sopa_text_set_content (elem, text);
-  g_free (content);
+  content = g_strchomp (g_strndup (text, text_len));
 
-  g_queue_push_head (parser->priv->stack, elem);
+  if (strlen (content))
+    {
+      elem = sopa_text_new ();
+      sopa_text_set_content (elem, text);
+
+      g_queue_push_head (parser->priv->stack, elem);
+    }
+
+  g_free (content);
 }
 
 static void
