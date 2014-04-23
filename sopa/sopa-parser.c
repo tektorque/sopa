@@ -82,8 +82,9 @@ sopa_parser_stack_give_parent (SopaParser   *self,
 
   for (i = 0; i < pos; i++)
     {
-      sopa_element_add_child (parent,
-                              SOPA_NODE (g_queue_pop_head (self->priv->stack)));
+      sopa_element_insert_child_at_index (parent,
+                                          SOPA_NODE (g_queue_pop_head (self->priv->stack)),
+                                          0);
     }
 }
 
