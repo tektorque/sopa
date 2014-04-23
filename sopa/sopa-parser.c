@@ -217,13 +217,14 @@ sopa_parser_parse_data (SopaParser   *self,
   };
 
   GMarkupParseContext *context = NULL;
+  GError *internal_error = NULL;
 
   context = g_markup_parse_context_new (&parser, 0, self, NULL);
 
-  if (!g_markup_parse_context_parse (context, text, text_len, error))
+  if (!g_markup_parse_context_parse (context, text, text_len, &internal_error))
     goto exit;
 
-  if (!g_markup_parse_context_end_parse (context, error))
+  if (!g_markup_parse_context_end_parse (context, &internal_error))
     goto exit;
 
   /* Adds remaining stack elements to the root (document) element */
@@ -235,8 +236,12 @@ sopa_parser_parse_data (SopaParser   *self,
 exit:
   g_markup_parse_context_free (context);
 
-  if (error != NULL)
-    return FALSE;
+  if (internal_error != NULL)
+    {
+      g_propagate_error (error, internal_error);
+      g_clear_error (&internal_error);
+      return FALSE;
+    }
 
   return TRUE;
 }
