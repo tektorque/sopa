@@ -8,6 +8,9 @@ INCLUDES = \
 	-I$(top_builddir)
 
 noinst_PROGRAMS =               \
+  parse_and_dump                \
 	$(NULL)
+
+dump_SOURCES = parse_and_dump.c
 
 EXTRA_DIST =
