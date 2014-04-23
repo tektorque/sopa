@@ -346,6 +346,22 @@ sopa_element_destroy_all_children (SopaElement *self)
 }
 
 /**
+ * sopa_element_get_n_children:
+ * @self: a #SopaElement
+ *
+ * Retrieves a number of children of @self
+ *
+ * Return value: the number of children of an element
+ */
+gint
+sopa_element_get_n_children (SopaElement *self)
+{
+  g_return_val_if_fail (SOPA_IS_ELEMENT (self), 0);
+
+  return sopa_node_get_n_children (SOPA_NODE (self));
+}
+
+/**
  * sopa_element_add_attribute:
  * @self: a #SopaElement
  * @key: the attribute name
