@@ -192,6 +192,7 @@ handle_passthrough (GMarkupParseContext *context,
                     GError             **error)
 {
   //SopaParser *parser = SOPA_PARSER (user_data);
+  g_print ("handle_passthrough\n");
 }
 
 static void
@@ -200,6 +201,10 @@ handle_error (GMarkupParseContext *context,
               gpointer             user_data)
 {
   //SopaParser *parser = SOPA_PARSER (user_data);
+  const gchar *cur_elem;
+
+  cur_elem = g_markup_parse_context_get_element (context);
+  g_print ("handle_error elem:%s\n", cur_elem);
 }
 
 static gboolean
@@ -221,25 +226,25 @@ sopa_parser_parse_data (SopaParser   *self,
 
   context = g_markup_parse_context_new (&parser, 0, self, NULL);
 
-  if (!g_markup_parse_context_parse (context, text, text_len, &internal_error))
-    goto exit;
+  if (!g_markup_parse_context_parse (context, text, text_len, &internal_error));
 
-  if (!g_markup_parse_context_end_parse (context, &internal_error))
-    goto exit;
+
+  if (!g_markup_parse_context_end_parse (context, &internal_error));
+
 
   /* Adds remaining stack elements to the root (document) element */
   self->priv->doc = sopa_document_new ();
   sopa_parser_stack_give_parent (self,
                                  SOPA_ELEMENT (self->priv->doc),
                                  -1);
-
+  goto exit;
 exit:
   g_markup_parse_context_free (context);
 
   if (internal_error != NULL)
     {
       g_propagate_error (error, internal_error);
-      g_clear_error (&internal_error);
+      //g_clear_error (&internal_error);
       return FALSE;
     }
 
