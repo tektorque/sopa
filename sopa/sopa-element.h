@@ -76,7 +76,7 @@ SopaElement *                       sopa_element_new                            
 const gchar *                       sopa_element_get_tag                        (SopaElement                *self);
 void                                sopa_element_add_child                      (SopaElement                *self,
                                                                                  SopaNode                   *child);
-void                                sopa_element_add_child_at_index             (SopaElement                *self,
+void                                sopa_element_insert_child_at_index          (SopaElement                *self,
                                                                                  SopaNode                   *child,
                                                                                  gint                        index_);
 void                                sopa_element_insert_child_above             (SopaElement                *self,
