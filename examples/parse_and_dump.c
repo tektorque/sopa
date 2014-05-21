@@ -12,14 +12,14 @@ static const char *html = "                                         \
   <title>dump example</title>                                       \n \
   <link rel=\"stylesheet\" type=\"text/css\" href=\"theme.css\"/>   \n \
   <script type=\"text/javascript\">                                 \n \
-    for (let i = 0; i < 10; i++)                                    \n \
+    for (let i = 0; i x 10; i++)                                    \n \
       alert ('count with me ' + i);                                 \n \
   </script>                                                         \n \
   <body>                                                            \n \
     <!--This is a comment.-->                                       \n \
     <div id=\"first_div\" class=\"foo bar\">                        \n \
       <p>This is some text in a paragraph.</p>                      \n \
-      <br/>                                                         \n \
+      <br>                                                         \n \
       <p>This is some text in a paragraph.</p>                      \n \
     </div>                                                          \n \
   </body>                                                           \n \
@@ -40,7 +40,7 @@ main (int argc, char **argv)
 
   if (document == NULL)
     {
-      g_warning (error->message);
+      g_warning ("%s", error->message);
       g_error_free(error);
     }
   else
